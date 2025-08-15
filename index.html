@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wplace Charge Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4eb8d0 0%, #66b050 100%);
+            background-size: 400% 400%;
+            animation: gradientFlow 15s ease infinite;
+            color: white;
+            position: relative;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .header {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+            background: linear-gradient(45deg, #fff, #f0f0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .calculator {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 400px;
+        }
+
+        .input-group {
+            margin-bottom: 2rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.2rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .input-group input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .calculate-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+            min-width: 150px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(238, 90, 36, 0.4);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .result {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: all 0.3s ease;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            overflow: auto;
+        }
+
+        .result.show {
+            background: rgba(46, 204, 113, 0.2);
+            border-color: rgba(46, 204, 113, 0.4);
+        }
+
+        .result-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            font-weight: 500;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .result-time {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2ecc71;
+            margin-top: 0.5rem;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .icon {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+
+        .credits {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 20px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            z-index: 1000;
+        }
+
+        .credits a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .credits a:hover {
+            color: #ffffff;
+        }
+
+        .credits .separator {
+            margin: 0 8px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 480px) {
+            .calculator {
+                margin: 1rem;
+                padding: 2rem 1.5rem;
+                width: calc(100% - 2rem);
+            }
+            
+            .header {
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .credits {
+                padding: 10px 15px;
+                font-size: 0.7rem;
+            }
+
+            .credits .separator {
+                margin: 0 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        Wplace Charge Calculator
+    </div>
+    
+    <div class="calculator">
+        <div class="input-group">
+            <label for="chargeInput">
+                Enter your charge capacity:
+            </label>
+            <input type="number" id="chargeInput" placeholder="Charge Capacity..." min="0" step="0.1">
+        </div>
+        
+        <button class="calculate-btn" onclick="calculateChargeTime()">
+            Calculate
+        </button>
+        
+        <div class="result" id="result">
+            <div class="result-text">Enter a value and click calculate to see when your Wplace charges will be full!</div>
+        </div>
+    </div>
+
+    <div class="credits">
+        Made with ❤️ by Aeroshide
+    </div>
+
+    <script>
+        let countdownInterval = null;
+        let targetTime = null;
+
+        function getEscalationMessage(count) {
+            const messages = [
+            "Please enter a valid positive number!",
+            "Please enter a valid positive number!",
+            "Please enter a valid positive number!",
+            "Please enter a valid positive number!",
+            "Please enter a valid positive number!",
+            "Please enter a valid positive number!",
+            "Still not a valid number... numbers only.",
+            "Okay, seriously. Stop.",
+            "You're testing this on purpose, aren't you?",
+            "Stop testing me. I have feelings.",
+            "You're gonna have a bad time fam.",
+            "...",
+            "I'm gonna run out of messages for you.",
+            "Is that what you really want?",
+            "3 Left...",
+            "2 Left...",
+            "1 Left...",
+            "...",
+            "...",
+            "...",
+            "What do you really want?",
+            "This site runs locally on your browser... It will not break.",
+            "...",
+            "...",
+            "...",
+            "Really...?",
+            "...",
+            "Okay okay, i get it!",
+            "You're the type of person who likes to discover things...",
+            "Well... since you're already here...",
+            "You might aswell be on the game...",
+            "...",
+            "It has something to do with *her* name on it...",
+            "On the apex domain...",
+            "...",
+            "Still confused?",
+            "...",
+            "Maybe you're not ready for the responsibility.",
+            "...",
+            "Good luck... if you're trying.",
+            "...",
+            "Goodbye if you're giving up.",
+            "...",
+            "Thanks for caring.",
+            "...",
+            "Bye.",
+            "Bye.",
+            "Bye.",
+            "Bye.",
+            "Bye.",
+            "Bye.",
+            "Please enter a valid positive number!"
+            ];
+
+        return messages[Math.min(count - 1, messages.length - 1)];
+        }
+
+        function incrementInvalidCount() {
+        const raw = localStorage.getItem('chargeInvalidCount') || '0';
+        const next = Math.min(999, parseInt(raw, 10) + 1);
+        localStorage.setItem('chargeInvalidCount', String(next));
+        return next;
+        }
+
+        function resetInvalidCount() {
+        localStorage.setItem('chargeInvalidCount', '0');
+        }
+
+        function startCountdown() {
+        if (!targetTime) return;
+        clearInterval(countdownInterval);
+        countdownInterval = setInterval(() => {
+            const now = new Date();
+            const diff = Math.max(0, targetTime.getTime() - now.getTime());
+            const secs = Math.floor(diff / 1000);
+            const hours = Math.floor(secs / 3600);
+            const mins = Math.floor((secs % 3600) / 60);
+            const seconds = secs % 60;
+            const pad = v => String(v).padStart(2, '0');
+            const countdownEl = document.getElementById('countdownTime');
+            if (countdownEl) countdownEl.textContent = `${pad(hours)}:${pad(mins)}:${pad(seconds)}`;
+            if (diff === 0) {
+            clearInterval(countdownInterval);
+            const result = document.getElementById('result');
+            if (result) {
+                const msg = '<i class="fas fa-battery-full" style="color: #2ecc71;"></i> Fully charged. You win. Stop testing me.';
+                const timeEl = result.querySelector('.result-time');
+                if (timeEl) timeEl.textContent = targetTime.toLocaleString('en-US', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+                hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
+                });
+                const top = result.querySelector('.result-text');
+                if (top) top.innerHTML = msg;
+            }
+            resetInvalidCount();
+            }
+        }, 250);
+        }
+
+        function calculateChargeTime() {
+        const input = document.getElementById('chargeInput');
+        const result = document.getElementById('result');
+        const x = parseFloat(input.value);
+
+        if (isNaN(x) || x < 0) {
+            const count = incrementInvalidCount();
+            const msg = getEscalationMessage(count);
+            result.innerHTML = `<div class="result-text" style="color: #e74c3c;"><i class="fas fa-exclamation-triangle"></i> ${msg}</div>`;
+            result.classList.remove('show');
+            clearInterval(countdownInterval);
+            return;
+        }
+
+        // Valid input: reset any previous nonsense
+        resetInvalidCount();
+        clearInterval(countdownInterval);
+
+        const totalSeconds = x * 30;
+        targetTime = new Date(Date.now() + totalSeconds * 1000);
+
+        const options = {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true
+        };
+
+        const formattedTime = targetTime.toLocaleString('en-US', options);
+
+        result.innerHTML = `
+            <div class="result-text">
+            <i class="fas fa-battery-full" style="color: #2ecc71;"></i> Your WPlace charges will be full at:
+            </div>
+            <div class="result-time">${formattedTime}</div>
+            <div id="countdown" style="margin-top: 1rem; font-size: 1rem; font-weight: 600; color: #f39c12;">
+            <i class="fas fa-clock"></i> <span id="countdownTime">Calculating...</span>
+            </div>
+        `;
+        result.classList.add('show');
+
+        startCountdown();
+        }
+
+        
+        function startCountdown() {
+            function updateCountdown() {
+                const now = new Date();
+                const timeLeft = targetTime - now;
+                
+                if (timeLeft <= 0) {
+                    document.getElementById('countdownTime').innerHTML = 'CHARGES ARE FULL! ⚡';
+                    document.getElementById('countdown').style.color = '#2ecc71';
+                    clearInterval(countdownInterval);
+                    return;
+                }
+                
+                // Calculate days, hours, minutes, seconds
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                
+                // Format with leading zeros
+                const dd = days.toString().padStart(2, '0');
+                const hh = hours.toString().padStart(2, '0');
+                const mm = minutes.toString().padStart(2, '0');
+                const ss = seconds.toString().padStart(2, '0');
+                
+                document.getElementById('countdownTime').innerHTML = `${dd}d ${hh}h ${mm}m ${ss}s`;
+            }
+            
+            updateCountdown(); // Update immediately
+            countdownInterval = setInterval(updateCountdown, 1000); // Then every second
+        }
+        
+        // Allow Enter key to trigger calculation
+        document.getElementById('chargeInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                calculateChargeTime();
+            }
+        });
+        
+        // Auto-focus input on load
+        window.addEventListener('load', function() {
+            document.getElementById('chargeInput').focus();
+        });
+    </script>
+</body>
+</html>
