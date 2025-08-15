@@ -125,8 +125,8 @@
         }
 
         .result.show {
-            background: rgba(46, 204, 113, 0.2);
-            border-color: rgba(46, 204, 113, 0.4);
+            background: rgba(204, 46, 46, 0.2);
+            border-color: rgba(204, 46, 46, 0.4);
         }
 
         .result-text {
@@ -140,7 +140,7 @@
         .result-time {
             font-size: 1.3rem;
             font-weight: 700;
-            color: #2ecc71;
+            color: #cc2e2e;
             margin-top: 0.5rem;
             word-wrap: break-word;
             overflow-wrap: break-word;
@@ -230,7 +230,9 @@
     </div>
 
     <div class="credits">
-        Made with ❤️ by Aeroshide
+        Made with ❤️ by Aeroshide <span class="separator">•</span>
+        <a href="https://wplace.live/">wplace.live</a> <span class="separator">•</span>
+        v1.1a
     </div>
 
     <script>
@@ -239,195 +241,135 @@
 
         function getEscalationMessage(count) {
             const messages = [
-            "Please enter a valid positive number!",
-            "Please enter a valid positive number!",
-            "Please enter a valid positive number!",
-            "Please enter a valid positive number!",
-            "Please enter a valid positive number!",
-            "Please enter a valid positive number!",
-            "Still not a valid number... numbers only.",
-            "Okay, seriously. Stop.",
-            "You're testing this on purpose, aren't you?",
-            "Stop testing me. I have feelings.",
-            "You're gonna have a bad time fam.",
-            "...",
-            "I'm gonna run out of messages for you.",
-            "Is that what you really want?",
-            "3 Left...",
-            "2 Left...",
-            "1 Left...",
-            "...",
-            "...",
-            "...",
-            "What do you really want?",
-            "This site runs locally on your browser... It will not break.",
-            "...",
-            "...",
-            "...",
-            "Really...?",
-            "...",
-            "Okay okay, i get it!",
-            "You're the type of person who likes to discover things...",
-            "Well... since you're already here...",
-            "You might aswell be on the game...",
-            "...",
-            "It has something to do with *her* name on it...",
-            "On the apex domain...",
-            "...",
-            "Still confused?",
-            "...",
-            "Maybe you're not ready for the responsibility.",
-            "...",
-            "Good luck... if you're trying.",
-            "...",
-            "Goodbye if you're giving up.",
-            "...",
-            "Thanks for caring.",
-            "...",
-            "Bye.",
-            "Bye.",
-            "Bye.",
-            "Bye.",
-            "Bye.",
-            "Bye.",
-            "Please enter a valid positive number!"
+            "Please enter a valid positive number!", "Please enter a valid positive number!", "Please enter a valid positive number!", "Please enter a valid positive number!", "Please enter a valid positive number!", "Please enter a valid positive number!", "Still not a valid number... numbers only.", "Okay, seriously. Stop.", "You're testing this on purpose, aren't you?", "Stop testing me. I have feelings.", "You're gonna have a bad time fam.", "...", "I'm gonna run out of messages for you.", "Is that what you really want?", "3 Left...", "2 Left...", "1 Left...", "...", "...", "...", "What do you really want?", "This site runs locally on your browser... It will not break.", "...", "...", "...", "Really...?", "...", "Okay okay, i get it!", "You're the type of person who likes to discover things...", "Well... since you're already here...", "You might aswell be on the game...", "...", "It has something to do with *her* name on it...", "On the apex domain...", "...", "Still confused?", "...", "Maybe you're not ready for the responsibility.", "...", "Good luck... if you're trying.", "...", "Goodbye if you're giving up.", "...", "Thanks for caring.", "...", "Bye.", "Bye.", "Bye.", "Bye.", "Bye.", "Bye.", "Please enter a valid positive number!"
             ];
-
-        return messages[Math.min(count - 1, messages.length - 1)];
+            return messages[Math.min(count - 1, messages.length - 1)];
         }
 
         function incrementInvalidCount() {
-        const raw = localStorage.getItem('chargeInvalidCount') || '0';
-        const next = Math.min(999, parseInt(raw, 10) + 1);
-        localStorage.setItem('chargeInvalidCount', String(next));
-        return next;
+            const raw = localStorage.getItem('chargeInvalidCount') || '0';
+            const next = Math.min(999, parseInt(raw, 10) + 1);
+            localStorage.setItem('chargeInvalidCount', String(next));
+            return next;
         }
 
         function resetInvalidCount() {
-        localStorage.setItem('chargeInvalidCount', '0');
+            localStorage.setItem('chargeInvalidCount', '0');
         }
 
         function startCountdown() {
-        if (!targetTime) return;
-        clearInterval(countdownInterval);
-        countdownInterval = setInterval(() => {
-            const now = new Date();
-            const diff = Math.max(0, targetTime.getTime() - now.getTime());
-            const secs = Math.floor(diff / 1000);
-            const hours = Math.floor(secs / 3600);
-            const mins = Math.floor((secs % 3600) / 60);
-            const seconds = secs % 60;
-            const pad = v => String(v).padStart(2, '0');
-            const countdownEl = document.getElementById('countdownTime');
-            if (countdownEl) countdownEl.textContent = `${pad(hours)}:${pad(mins)}:${pad(seconds)}`;
-            if (diff === 0) {
+            if (!targetTime) return;
             clearInterval(countdownInterval);
-            const result = document.getElementById('result');
-            if (result) {
-                const msg = '<i class="fas fa-battery-full" style="color: #2ecc71;"></i> Fully charged. You win. Stop testing me.';
-                const timeEl = result.querySelector('.result-time');
-                if (timeEl) timeEl.textContent = targetTime.toLocaleString('en-US', {
-                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-                hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
-                });
-                const top = result.querySelector('.result-text');
-                if (top) top.innerHTML = msg;
-            }
-            resetInvalidCount();
-            }
-        }, 250);
-        }
 
-        function calculateChargeTime() {
-        const input = document.getElementById('chargeInput');
-        const result = document.getElementById('result');
-        const x = parseFloat(input.value);
-
-        if (isNaN(x) || x < 0) {
-            const count = incrementInvalidCount();
-            const msg = getEscalationMessage(count);
-            result.innerHTML = `<div class="result-text" style="color: #e74c3c;"><i class="fas fa-exclamation-triangle"></i> ${msg}</div>`;
-            result.classList.remove('show');
-            clearInterval(countdownInterval);
-            return;
-        }
-
-        // Valid input: reset any previous nonsense
-        resetInvalidCount();
-        clearInterval(countdownInterval);
-
-        const totalSeconds = x * 30;
-        targetTime = new Date(Date.now() + totalSeconds * 1000);
-
-        const options = {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: true
-        };
-
-        const formattedTime = targetTime.toLocaleString('en-US', options);
-
-        result.innerHTML = `
-            <div class="result-text">
-            <i class="fas fa-battery-full" style="color: #2ecc71;"></i> Your WPlace charges will be full at:
-            </div>
-            <div class="result-time">${formattedTime}</div>
-            <div id="countdown" style="margin-top: 1rem; font-size: 1rem; font-weight: 600; color: #f39c12;">
-            <i class="fas fa-clock"></i> <span id="countdownTime">Calculating...</span>
-            </div>
-        `;
-        result.classList.add('show');
-
-        startCountdown();
-        }
-
-        
-        function startCountdown() {
             function updateCountdown() {
                 const now = new Date();
-                const timeLeft = targetTime - now;
-                
+                const timeLeft = targetTime.getTime() - now.getTime();
+
                 if (timeLeft <= 0) {
-                    document.getElementById('countdownTime').innerHTML = 'CHARGES ARE FULL! ⚡';
-                    document.getElementById('countdown').style.color = '#2ecc71';
                     clearInterval(countdownInterval);
+                    localStorage.removeItem('targetTime'); // Clear saved time
+                    targetTime = null;
+
+                    const result = document.getElementById('result');
+                    if (result) {
+                        const originalTargetTime = new Date(now.getTime() + timeLeft);
+                        const timeEl = result.querySelector('.result-time');
+                        if (timeEl) timeEl.textContent = originalTargetTime.toLocaleString('en-US', {
+                            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+                            hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
+                        });
+                        const top = result.querySelector('.result-text');
+                        if (top) top.innerHTML = 'Fully charged, go back to painting pixels.';
+                        const countdownEl = document.getElementById('countdownTime');
+                        if (countdownEl) countdownEl.textContent = 'CHARGES ARE FULL!';
+                        const countdownWrapper = document.getElementById('countdown');
+                        if (countdownWrapper) countdownWrapper.style.color = '#cc2e2e';
+                    }
+                    resetInvalidCount();
                     return;
                 }
-                
-                // Calculate days, hours, minutes, seconds
+
                 const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-                
-                // Format with leading zeros
-                const dd = days.toString().padStart(2, '0');
-                const hh = hours.toString().padStart(2, '0');
-                const mm = minutes.toString().padStart(2, '0');
-                const ss = seconds.toString().padStart(2, '0');
-                
-                document.getElementById('countdownTime').innerHTML = `${dd}d ${hh}h ${mm}m ${ss}s`;
+                const dd = String(days).padStart(2, '0'), hh = String(hours).padStart(2, '0'),
+                    mm = String(minutes).padStart(2, '0'), ss = String(seconds).padStart(2, '0');
+                const countdownTimeEl = document.getElementById('countdownTime');
+                if (countdownTimeEl) countdownTimeEl.textContent = `${dd}d ${hh}h ${mm}m ${ss}s`;
             }
-            
-            updateCountdown(); // Update immediately
-            countdownInterval = setInterval(updateCountdown, 1000); // Then every second
+
+            updateCountdown();
+            countdownInterval = setInterval(updateCountdown, 1000);
         }
         
-        // Allow Enter key to trigger calculation
+        function displayCountdownResult(time) {
+            targetTime = time;
+            const result = document.getElementById('result');
+            const options = {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+                hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
+            };
+            const formattedTime = time.toLocaleString('en-US', options);
+
+            result.innerHTML = `
+                <div class="result-text">
+                  Your Wplace charges will be full at:
+                </div>
+                <div class="result-time">${formattedTime}</div>
+                <div id="countdown" style="margin-top: 1rem; font-size: 1rem; font-weight: 600; color: #cc4e4e;">
+                <i class="fas fa-clock"></i> <span id="countdownTime">Loading...</span>
+                </div>
+            `;
+            result.classList.add('show');
+            startCountdown();
+        }
+
+        function calculateChargeTime() {
+            const input = document.getElementById('chargeInput');
+            const result = document.getElementById('result');
+            const x = parseFloat(input.value);
+
+            if (isNaN(x) || x < 0) {
+                const count = incrementInvalidCount();
+                const msg = getEscalationMessage(count);
+                result.innerHTML = `<div class="result-text" style="color: #e74c3c;"><i class="fas fa-exclamation-triangle"></i> ${msg}</div>`;
+                result.classList.remove('show');
+                clearInterval(countdownInterval);
+                localStorage.removeItem('targetTime'); // Clear saved time on error
+                targetTime = null;
+                return;
+            }
+
+            resetInvalidCount();
+            clearInterval(countdownInterval);
+
+            const totalSeconds = x * 30;
+            const newTargetTime = new Date(Date.now() + totalSeconds * 1000);
+            
+            localStorage.setItem('targetTime', newTargetTime.getTime());
+            displayCountdownResult(newTargetTime);
+        }
+        
         document.getElementById('chargeInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 calculateChargeTime();
             }
         });
         
-        // Auto-focus input on load
         window.addEventListener('load', function() {
             document.getElementById('chargeInput').focus();
+
+            const savedTargetTimestamp = localStorage.getItem('targetTime');
+            if (savedTargetTimestamp) {
+                const timestamp = parseInt(savedTargetTimestamp, 10);
+                if (timestamp > Date.now()) {
+                    const restoredTargetTime = new Date(timestamp);
+                    displayCountdownResult(restoredTargetTime);
+                } else {
+                    localStorage.removeItem('targetTime'); // Clean up expired timer
+                }
+            }
         });
     </script>
 </body>
